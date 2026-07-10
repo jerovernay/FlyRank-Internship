@@ -1,28 +1,33 @@
-# Skills
+# Skills — the router
 
-Reusable, model-loadable skills for this internship. They live under
-[`.claude/skills/`](../.claude/skills/) so Claude Code auto-discovers them; this
-file is the human-readable catalog.
+This folder is a small library of **skills**: focused instruction files your AI assistant loads
+one at a time. One skill per task keeps the assistant sharp — its context window is small, and
+filling it with everything makes it worse at the one thing you need.
 
-An AI assistant working in this repo should **read this file first**, then load
-the skills relevant to the task.
+**How to use it (repo-reading agents — Claude Code, Cursor, Codex):** they find this file
+automatically via `AGENTS.md` / `CLAUDE.md`. Just tell your assistant which task you're doing.
 
-## Catalog
+**Using a chat-only assistant (ChatGPT / Gemini in a browser)?** Open the skill file on GitHub,
+copy its whole content, and paste it into your chat before asking for help. That's it.
 
-| Skill | Load it when | Path |
+## The table — find your task, load ONE skill
+
+| Your task | Load this skill | Also load for data work |
 |---|---|---|
-| **framing-ml-problems** | Turning a vague "predict/cluster/rank X" into a defensible problem (decision → action → cost), picking the unit of analysis, checking leakage, enforcing careful language. | [`.claude/skills/framing-ml-problems/`](../.claude/skills/framing-ml-problems/SKILL.md) |
-| **flyrank-data** | Any task touching the starter CSV or the warehouse release: the four lanes, table grains, the observable-only / leakage discipline, column gotchas, public-safety rules. | [`.claude/skills/flyrank-data/`](../.claude/skills/flyrank-data/SKILL.md) |
+| Any task — how to work with your assistant at all | `directing-your-ai-assistant/SKILL.md` | — |
+| Pick a lane, frame your question (ML-02, ML-03) | `framing-ml-problems/SKILL.md` | `flyrank/flyrank-data/SKILL.md` |
+| Write + verify the data contract (ML-04) | `writing-data-contracts/SKILL.md` | `flyrank/flyrank-data/SKILL.md` |
+| Query the big warehouse without downloading it (ML-04/05, capstone) | `querying-big-datasets/SKILL.md` | `flyrank/flyrank-data/SKILL.md` |
+| EDA + signal tests with verdicts (ML-06) | `auditing-signals/SKILL.md` | `flyrank/flyrank-data/SKILL.md` |
+| Build the rule baseline + ranked queue (ML-07) | `building-baselines/SKILL.md` | `flyrank/flyrank-data/SKILL.md` |
+| Train and compare the model (ML-08) | `training-honest-models/SKILL.md` | `flyrank/flyrank-data/SKILL.md` |
+| Hunt leakage; validate honestly (ML-05, ML-09) | `hunting-leakage-and-validating/SKILL.md` | `flyrank/flyrank-data/SKILL.md` |
+| Write claims that hold (ML-09, ML-10, the paper) | `writing-honest-claims/SKILL.md` | — |
+| Write the research paper (ML-11, W7) | `writing-research-papers/SKILL.md` | — |
+| Deploy the paper as a page (ML-11) | `deploying-static-pages/SKILL.md` | — |
+| Understand FlyRank + the problem (background) | `flyrank/flyrank-context/SKILL.md` | — |
 
-## How to use
+## Reuse this on your next project
 
-- **In Claude Code:** the Skill tool discovers these by their `name:` in the
-  SKILL.md frontmatter. Invoke `framing-ml-problems` and `flyrank-data`.
-- **In any other assistant (Colab, chat):** paste the relevant `SKILL.md` body
-  into context before you start the task.
-
-## Adding a skill
-
-Create `.claude/skills/<name>/SKILL.md` with YAML frontmatter (`name`,
-`description` — the description is what the model matches on, so make it
-trigger-rich), keep the body short and checklist-driven, then add a row above.
+Every skill outside `flyrank/` is **general** — take this whole folder to any future project.
+Delete `skills/flyrank/` and the flyrank column above, and everything else still works.
