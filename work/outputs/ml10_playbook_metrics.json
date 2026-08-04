@@ -1,0 +1,113 @@
+{
+  "scoring_month": "2026-05",
+  "reference_fit_month": "2026-03",
+  "tiers": [
+    {
+      "tier": 1,
+      "archetype": "Buried",
+      "action": "prune/rewrite",
+      "reason_code": "buried_worse_than_chance_durable",
+      "n_pages": 20764,
+      "oe_lift": {
+        "ml08": [
+          0.645,
+          0.456,
+          0.81
+        ],
+        "ml09_recheck": [
+          0.667,
+          0.47,
+          0.855
+        ]
+      },
+      "march_may_retention": 0.824,
+      "review_cap_top20_per_client": 505
+    },
+    {
+      "tier": 2,
+      "archetype": "Overlooked",
+      "action": "improve/expand",
+      "reason_code": "overlooked_no_lift_unstable_reverify",
+      "n_pages": 7041,
+      "oe_lift": {
+        "ml08": [
+          0.896,
+          0.714,
+          1.05
+        ]
+      },
+      "march_may_retention": 0.353
+    },
+    {
+      "tier": 3,
+      "archetype": "Steady performers",
+      "action": "protect/monitor",
+      "reason_code": "steady_high_value_no_lift",
+      "n_pages": 25110,
+      "oe_lift": {
+        "ml08": [
+          1.059,
+          0.865,
+          1.233
+        ]
+      },
+      "march_may_retention": 0.648,
+      "review_cap_top20_per_client": 498
+    },
+    {
+      "tier": 4,
+      "archetype": "Long tail",
+      "action": "monitor",
+      "reason_code": "long_tail_low_value_no_lift",
+      "n_pages": 40813,
+      "oe_lift": {
+        "ml08": [
+          1.041,
+          0.93,
+          1.15
+        ]
+      },
+      "march_may_retention": 0.671
+    }
+  ],
+  "coverage_funnel_may": {
+    "raw_rows": 389153,
+    "dropped_no_march_match": 57716,
+    "dropped_unpublished_or_deleted": 10331,
+    "dropped_no_signal": 150729,
+    "dropped_below_volume_floor": 76649,
+    "queue_eligible": 93728,
+    "coverage_pct": 0.2409
+  },
+  "client_concentration": {
+    "n_clients": 44,
+    "top_client_share": 0.2133
+  },
+  "retrain_triggers": {
+    "overall_retention_baseline": 0.6583,
+    "overall_chance": 0.3298,
+    "overall_trigger_below": 0.494,
+    "per_archetype": {
+      "Long tail": {
+        "baseline": 0.6706,
+        "chance": 0.4296,
+        "trigger_below": 0.5501
+      },
+      "Steady performers": {
+        "baseline": 0.6477,
+        "chance": 0.2909,
+        "trigger_below": 0.4693
+      },
+      "Buried": {
+        "baseline": 0.8239,
+        "chance": 0.2073,
+        "trigger_below": 0.5156
+      },
+      "Overlooked": {
+        "baseline": 0.3531,
+        "chance": 0.0722,
+        "trigger_below": 0.2127
+      }
+    }
+  }
+}
