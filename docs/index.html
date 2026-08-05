@@ -142,7 +142,7 @@
       <h2>Abstract</h2>
       <div class="abstract">
         <p>
-          Which of a content team's tens of thousands of underperforming search pages are actually worth its limited attention, and does a fixed CTR-based rule pick the right ones? Using one month of search-performance data from the FlyRank ML Internship warehouse (331,437 content items, aggregated from 9.8M daily fact rows), a transparent baseline rule and an unsupervised K-Means clustering (k=4, four search-side features, GroupKFold-by-client validation) were each evaluated against the same April outcome window.
+          FlyRank's content teams work a client portfolio of hundreds of thousands of live search pages, only a small fraction of which can get editorial attention in any given cycle — so which pages are actually worth it, and does a fixed CTR-based rule pick the right ones? Using one month of search-performance data from the FlyRank ML Internship warehouse (331,437 content items, aggregated from 9.8M daily fact rows), a transparent baseline rule and an unsupervised K-Means clustering (k=4, four search-side features, GroupKFold-by-client validation) were each evaluated against the same April outcome window.
         </p>
         <p>
           The rule's raw 1.14× lift over the base improve-rate evaporates once starting CTR is controlled for (O/E 1.03, 95% CI [0.92, 1.16]) — the lift was regression to the mean, not rule skill — and three of the four archetype groups show no better discrimination than chance either.
@@ -172,7 +172,7 @@
     <section id="intro">
       <h2>Introduction</h2>
       <p>
-        A content team managing tens of thousands of pages cannot manually review each one every month. The practical question is triage: which pages are worth a snippet rewrite, which are worth leaving alone, and which are quietly costing traffic by staying online at all? The <strong>unit of analysis is one content item (page)</strong>, described only by observable 90-day search-side signals and metadata — never by semantic content or text.
+        This work starts from FlyRank's own operating problem. The client portfolio this dataset is drawn from carries hundreds of thousands of live search pages, and a content team cannot manually review each one every month. The practical question is triage: which pages are worth a snippet rewrite, which are worth leaving alone, and which are quietly costing traffic by staying online at all? The <strong>unit of analysis is one content item (page)</strong>, described only by observable 90-day search-side signals and metadata — never by semantic content or text.
       </p>
       <p>
         The cost of getting this wrong is not a single bad call — it lands in <strong>batches</strong>. Pruning a hidden gem because it resembled the wrong group loses that traffic permanently; spending rewrite capacity on pages that were never going to move wastes editorial time across every page carrying that label. A transparent rule already exists (flag low-CTR pages relative to their position peers); this work asks whether an unsupervised clustering of search behavior finds a better way to route the queue — and, honestly, whether either approach clears the bar of "better than doing nothing."
