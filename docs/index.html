@@ -121,6 +121,7 @@
   <nav class="toc">
     <div class="toc-title">Contents</div>
     <a href="#abstract">Abstract</a>
+    <a href="#glossary">Glossary</a>
     <a href="#intro">Introduction</a>
     <a href="#data">Data</a>
     <a href="#methodology">Methodology</a>
@@ -143,6 +144,22 @@
           Which of a content team's tens of thousands of underperforming search pages are actually worth its limited attention, and does a fixed CTR-based rule pick the right ones? Using one month of search-performance data from the FlyRank ML Internship warehouse (331,437 content items, aggregated from 9.8M daily fact rows), a transparent baseline rule and an unsupervised K-Means clustering (k=4, four search-side features, GroupKFold-by-client validation) were each evaluated against the same April outcome window. The rule's raw 1.14× lift over the base improve-rate evaporates once starting CTR is controlled for (O/E 1.03, 95% CI [0.92, 1.16]) — the lift was regression to the mean, not rule skill — and three of the four archetype groups show no better discrimination than chance either. Two results survive: the <strong>Buried</strong> archetype scores meaningfully <em>below</em> chance (O/E 0.645, CI [0.456, 0.810], independently reproduced at 0.667) and is also the most durable label across months (82.4% March→May retention vs. 20.7% expected by chance), making it the only recommendation with two independent signals in agreement. This output is decision-support for a monthly content-review queue, not a causal or predictive claim.
         </p>
       </div>
+    </section>
+
+    <section id="glossary">
+      <h2>Glossary</h2>
+      <p>A quick lookup for the terms below, for readers skimming to Methodology or Results without a stats background. Skip this section if you're already comfortable with the vocabulary.</p>
+      <ul>
+        <li><strong>CI</strong> — Confidence interval. The range an estimate would plausibly fall in if the study were repeated; a CI that includes 1.0 (for an O/E ratio) means "indistinguishable from chance."</li>
+        <li><strong>O/E ratio</strong> — Observed ÷ Expected. Asks "did this group do better than we'd expect given who's in it," not just "did it beat everyone else." Expected is the population's improve-rate re-weighted to the group's own starting-CTR mix (see Methodology's Standardization note), so a group isn't credited just for containing more low-CTR pages, which improve more easily on their own.</li>
+        <li><strong>Base rate</strong> — How often something happens across the whole population, with no filtering applied. The number any rule or model needs to beat to be worth using.</li>
+        <li><strong>Regression to the mean</strong> — A group that started unusually low (or high) tends to drift back toward average on its own, with no intervention required. This is what made the baseline rule's raw lift look real when it wasn't.</li>
+        <li><strong>K-Means / centroid</strong> — K-Means groups pages into a fixed number of clusters by minimizing distance to each cluster's "average page" (its centroid). Every archetype in this paper is one such cluster.</li>
+        <li><strong>Silhouette score</strong> — A 0–1 score for how well-separated clusters are from each other. This paper's 0.387 is a moderate score, not a strong one — see Methodology.</li>
+        <li><strong>GroupKFold</strong> — A cross-validation split that keeps every page from the same client entirely inside one fold, so a client's own pages can never leak between training and testing.</li>
+        <li><strong>Volume floor</strong> — A minimum impression count a page must clear to be included, so a handful of views doesn't get treated as a reliable signal.</li>
+        <li><strong>Multiple comparisons / Bonferroni / FDR correction</strong> — When many groups are each tested against chance, some will clear the bar by luck alone. Bonferroni and FDR are standard statistical corrections for that risk; neither is applied here (see Methodology), which is why the results are framed as exploratory rather than confirmatory.</li>
+      </ul>
     </section>
 
     <section id="intro">
@@ -313,6 +330,9 @@
       <p>
         <strong>Retrain triggers</strong> (midpoint of each archetype's baseline and its own chance retention rate): overall retention below 49.4%; Buried below 51.6% (Tier 1's entire justification rests on this number); Overlooked below 21.3%; Long tail below 55.0%; Steady performers below 46.9%. Also: coverage-funnel drift from 24.1%, client-concentration drift from 21.3%, or Buried's O/E confidence interval crossing 1.0 on a fresh re-run.
       </p>
+      <div class="callout">
+        <strong>Clustering as a foundation, not a dead end.</strong> Most archetypes here show no raw O/E lift — read narrowly, that's a null result for clustering as a scoring tool. But Buried's combination of a below-chance O/E <em>and</em> 82.4% label durability shows that cluster membership itself carries real, measurable signal — being in a cluster means something, even where the lift alone doesn't. The honest reading isn't "abandon clustering," it's that this group-level lens is a plausible <strong>routing layer</strong> for something more targeted later: a natural next step, not built here, is per-archetype sub-scoring — ranking pages <em>within</em> an archetype rather than only between archetypes, so a 20,000-page tier isn't reviewed by <code>total_impressions</code> alone. This queue is a coarse first pass a future system could act on per cluster, not the final word on what clustering can do.
+      </div>
     </section>
 
     <section id="reproducibility">
@@ -337,6 +357,8 @@
     <footer id="acknowledgments">
       <h2>Acknowledgments &amp; Data Credit</h2>
       <p>Built on the <a href="https://flyrank.ai" target="_blank" rel="noopener">FlyRank ML Internship dataset</a>. Data credit and gratitude to FlyRank for the underlying warehouse this work is built on.</p>
+      <p>Thanks to Mirza, the mentor for this track, for the framing and feedback that shaped every stage of this work — from the initial research question through the honest-claims pass on these results. Thanks to Alen for the opportunity to take part in this internship in the first place.</p>
+      <p>This paper was developed with the assistance of Claude (Anthropic's AI assistant), used for methodology review, drafting support, and revision passes across the capstone. Every finding, decision, and conclusion in this paper is my own.</p>
       <p><a class="backtop" href="#abstract">↑ back to top</a></p>
     </footer>
   </main>
