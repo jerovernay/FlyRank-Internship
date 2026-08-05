@@ -1,0 +1,334 @@
+<title>What Actually Works on 30,000 Underperforming Pages? A Null Result, Honestly Reported</title>
+<meta name="description" content="An SEO content-refresh rule looked like it beat the base rate by 14% — until CTR was controlled for. What survived controlling for it, and the one archetype worth acting on.">
+<meta property="og:title" content="What Actually Works on 30,000 Underperforming Pages? A Null Result, Honestly Reported">
+<meta property="og:description" content="Unsupervised content archetypes vs. a transparent CTR rule, evaluated on the same split. The rule's apparent lift turned out to be regression to the mean.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+  :root{
+    --surface:#fcfcfb; --ink:#0b0b0b; --ink-soft:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --base:#c3c2b7; --accent:#2a78d6; --accent-dark:#1c5cab;
+    --card:#ffffff; --border:#e5e4dd;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --surface:#15161a; --ink:#eeeeec; --ink-soft:#b9b8b2; --muted:#8b8a85;
+      --grid:#2c2d31; --base:#3a3b3f; --accent:#5aa0ee; --accent-dark:#7ab4f5;
+      --card:#1b1c20; --border:#2c2d31;
+    }
+  }
+  :root[data-theme="dark"]{
+    --surface:#15161a; --ink:#eeeeec; --ink-soft:#b9b8b2; --muted:#8b8a85;
+    --grid:#2c2d31; --base:#3a3b3f; --accent:#5aa0ee; --accent-dark:#7ab4f5;
+    --card:#1b1c20; --border:#2c2d31;
+  }
+  :root[data-theme="light"]{
+    --surface:#fcfcfb; --ink:#0b0b0b; --ink-soft:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --base:#c3c2b7; --accent:#2a78d6; --accent-dark:#1c5cab;
+    --card:#ffffff; --border:#e5e4dd;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body{
+    margin:0; background:var(--surface); color:var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height:1.65;
+  }
+  .layout{ display:flex; max-width:1180px; margin:0 auto; }
+  nav.toc{
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+    width:220px; flex:none; padding:2.5rem 1rem 2rem 1.5rem; font-size:.86rem;
+  }
+  nav.toc a{
+    display:block; color:var(--ink-soft); text-decoration:none; padding:.32rem 0;
+    border-left:2px solid transparent; padding-left:.7rem; margin-left:-.7rem;
+  }
+  nav.toc a:hover{ color:var(--accent); }
+  nav.toc a.active{ color:var(--accent); border-left-color:var(--accent); font-weight:600; }
+  nav.toc .toc-title{ font-weight:700; color:var(--ink); margin-bottom:.9rem; font-size:.95rem; }
+
+  main{ flex:1; min-width:0; padding: 2.5rem 2rem 6rem; max-width: 760px; margin: 0 auto; }
+
+  h1{ font-size:1.85rem; line-height:1.3; margin:0 0 .4rem; }
+  .subtitle{ color:var(--ink-soft); font-size:1.05rem; margin: 0 0 1.2rem; }
+  .byline{ color:var(--muted); font-size:.88rem; margin-bottom:2.2rem; }
+  .byline a{ color:var(--muted); }
+
+  section{ margin: 2.6rem 0; scroll-margin-top: 1.5rem; }
+  h2{
+    font-size:1.3rem; border-bottom:1px solid var(--border); padding-bottom:.5rem;
+    margin: 0 0 1.1rem;
+  }
+  h3{ font-size:1.05rem; margin: 1.4rem 0 .5rem; }
+  p{ margin: 0 0 1rem; max-width: 68ch; }
+  ul, ol{ max-width: 68ch; padding-left: 1.3rem; }
+  li{ margin-bottom: .5rem; }
+  strong { color: var(--ink); }
+  code{
+    background: var(--card); border:1px solid var(--border); border-radius:4px;
+    padding:.1rem .35rem; font-size:.87em;
+  }
+
+  .abstract{
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:1.4rem 1.6rem; margin: 1.6rem 0 2.4rem;
+  }
+  .abstract p{ margin:0; max-width:none; }
+
+  table{ border-collapse: collapse; width:100%; margin: 1.2rem 0; font-size:.92rem; }
+  th, td{ text-align:left; padding:.55rem .7rem; border-bottom:1px solid var(--border); vertical-align: top; }
+  th{ color: var(--ink-soft); font-weight:600; border-bottom:2px solid var(--border); }
+  .table-wrap{ overflow-x:auto; margin: 1.2rem 0; }
+  .table-wrap table{ margin:0; min-width: 480px; }
+
+  figure{ margin: 1.8rem 0; }
+  figure img{ width:100%; max-width:100%; height:auto; border-radius:8px; border:1px solid var(--border); display:block; background:#fcfcfb; }
+  figcaption{ font-size:.87rem; color:var(--ink-soft); margin-top:.6rem; max-width:68ch; }
+  figcaption .takeaway{ color:var(--ink); font-weight:600; }
+
+  .callout{
+    border-left:3px solid var(--accent); background:var(--card); border-radius:0 8px 8px 0;
+    padding: .9rem 1.2rem; margin: 1.4rem 0; max-width: 66ch;
+  }
+  .callout.warn{ border-left-color:#c47a2e; }
+
+  .tier-1{ color: var(--accent-dark); font-weight:700; }
+
+  footer{
+    border-top:1px solid var(--border); margin-top:3rem; padding-top:1.6rem;
+    color:var(--ink-soft); font-size:.92rem;
+  }
+  footer a{ color:var(--accent); font-weight:600; }
+
+  a{ color: var(--accent); }
+
+  .backtop{ font-size:.82rem; color:var(--muted); text-decoration:none; }
+
+  @media (max-width: 860px){
+    .layout{ display:block; }
+    nav.toc{ position:static; width:auto; height:auto; padding:1.2rem 1.2rem 0; border-bottom:1px solid var(--border); }
+    nav.toc a{ display:inline-block; margin-right:1rem; padding:.25rem 0; }
+    main{ padding: 1.6rem 1.2rem 4rem; }
+  }
+</style>
+
+<div class="layout">
+  <nav class="toc">
+    <div class="toc-title">Contents</div>
+    <a href="#abstract">Abstract</a>
+    <a href="#intro">Introduction</a>
+    <a href="#data">Data</a>
+    <a href="#methodology">Methodology</a>
+    <a href="#results">Results</a>
+    <a href="#limitations">Limitations</a>
+    <a href="#recommendations">Recommendations</a>
+    <a href="#reproducibility">Reproducibility</a>
+    <a href="#acknowledgments">Acknowledgments</a>
+  </nav>
+
+  <main>
+    <h1>What Actually Works on 30,000 Underperforming Pages?</h1>
+    <p class="subtitle">A transparent CTR rule looked like it beat chance by 14%. Once starting CTR is controlled for, it doesn't — and neither does an unsupervised archetype clustering built to replace it. Two findings survive, and both point down.</p>
+    <p class="byline">FlyRank ML Internship — Capstone, Lane 3 (Structured Content Archetype Clustering) · <a href="https://github.com/jerovernay/FlyRank-Internship">Repository</a></p>
+
+    <section id="abstract">
+      <h2>Abstract</h2>
+      <div class="abstract">
+        <p>
+          Which of ~30,000 underperforming search pages are actually worth a content team's limited attention, and does a fixed CTR-based rule pick the right ones? Using one month of search-performance data from the FlyRank ML Internship warehouse (331,437 content items, aggregated from 9.8M daily fact rows), a transparent baseline rule and an unsupervised K-Means clustering (k=4, four search-side features, GroupKFold-by-client validation) were each evaluated against the same April outcome window. The rule's raw 1.14× lift over the base improve-rate evaporates once starting CTR is controlled for (O/E 1.03, 95% CI [0.92, 1.16]) — the lift was regression to the mean, not rule skill — and the archetype clustering shows no better discrimination for three of its four groups. Two results survive: the <strong>Buried</strong> archetype scores meaningfully <em>below</em> chance (O/E 0.645, CI [0.456, 0.810], independently reproduced at 0.667) and is also the most durable label across months (82.4% March→May retention vs. 20.7% expected by chance), making it the only recommendation with two independent signals in agreement. This output is decision-support for a monthly content-review queue, not a causal or predictive claim.
+        </p>
+      </div>
+    </section>
+
+    <section id="intro">
+      <h2>Introduction</h2>
+      <p>
+        A content team managing tens of thousands of pages cannot manually review each one every month. The practical question is triage: which pages are worth a snippet rewrite, which are worth leaving alone, and which are quietly costing traffic by staying online at all? The <strong>unit of analysis is one content item (page)</strong>, described only by observable 90-day search-side signals and metadata — never by semantic content or text.
+      </p>
+      <p>
+        The cost of getting this wrong is not a single bad call — it lands in <strong>batches</strong>. Pruning a hidden gem because it resembled the wrong group loses that traffic permanently; spending rewrite capacity on pages that were never going to move wastes editorial time across every page carrying that label. A transparent rule already exists (flag low-CTR pages relative to their position peers); this work asks whether an unsupervised clustering of search behavior finds a better way to route the queue — and, honestly, whether either approach clears the bar of "better than doing nothing."
+      </p>
+      <p>
+        The strongest pairwise correlation among the candidate signals was 0.33 (log-impressions × word count) — no single pair was redundant enough to collapse into a fixed if-statement axis, which is the case for trying a multi-dimensional clustering at all.
+      </p>
+    </section>
+
+    <section id="data">
+      <h2>Data</h2>
+      <p>
+        <strong>Release:</strong> Hugging Face <code>hf://datasets/FlyRank/internship-warehouse</code>. <strong>Tables:</strong> <code>fact_content_daily_performance</code>, partition <code>month=2026-03</code> (the development month), joined to <code>dim_content.parquet</code> for metadata; <code>dim_clients</code> read only to check data-availability windows, never as a feature. The <code>_sample</code> table — a sealed, later month — was never touched, to avoid peeking at the outcome window used for evaluation.
+      </p>
+      <p>
+        <strong>Date window:</strong> <code>report_date</code> between 2026-03-01 and 2026-03-31 (31 days). <strong>Grain:</strong> one row per content item. The fact table (9,841,378 rows, 331,437 distinct content ids) was aggregated to one row per item and joined to <code>dim_content</code>, with zero duplicate ids on either side.
+      </p>
+      <h3>What was excluded, and why</h3>
+      <div class="table-wrap">
+      <table>
+        <tr><th>Excluded</th><th>Reason</th></tr>
+        <tr><td>Hashed content / client / keyword / URL ids</td><td>Pseudonymous join keys with no ordinal meaning — using one as a feature would let a model memorize identity instead of learning from behavior.</td></tr>
+        <tr><td><code>engagement_rate</code></td><td>Proven leak in a held-out probe: honest-feature ROC AUC 0.856 climbs to 0.877 once added, because it's engineered directly from the label source.</td></tr>
+        <tr><td>GA4 columns where unavailable</td><td>Zero-filled placeholders, not real zero engagement. Row-level GA4 coverage is only 4.2% True (65.1% False, 30.7% NULL); even content-level, only 27.3% of pages carry any real GA4 history.</td></tr>
+        <tr><td><code>trend_direction</code>, <code>trend_pct</code></td><td>Label-derived — the exact columns a supervised target would be built from.</td></tr>
+        <tr><td><code>content_updated_date</code></td><td>Live, mutable dimension (242 distinct values, max date beyond the data window), no snapshot version in this release.</td></tr>
+        <tr><td>Optimization dates</td><td>Decision-derived and post-March; only 8.7% of items carry them, in a partial rollout.</td></tr>
+      </table>
+      </div>
+      <p>No client names, domains, URLs, page titles, or raw search queries exist anywhere in this release's schema.</p>
+    </section>
+
+    <section id="methodology">
+      <h2>Methodology</h2>
+      <p>
+        <strong>Features (4, all March search-side signals only):</strong> <code>log_impressions</code>, <code>log_clicks</code>, <code>ctr</code>, <code>avg_position</code>.
+      </p>
+      <p>
+        An earlier feature set added <code>word_count</code> and content-type/intent one-hots. It produced a k=2 split that a single depth-1 rule on "has word count" reproduced at 99.17% accuracy — a data-availability artifact (word count missing for ~30% of pages, median-filled, manufacturing a fake gap), not a real archetype. <code>engaged_sessions</code> was dropped for the same reason: one resulting cluster sat at exactly 100% GA4 coverage — it was finding the GA4-covered slice of the inventory, not a behavioral pattern.
+      </p>
+      <p>
+        <strong>Method:</strong> plain K-Means on standardized features, seed 42. <strong>k selection:</strong> swept k=2–10 inside each fold's training clients, rejecting any k whose smallest cluster fell under 2% of pages; k=4 won on mean silhouette (0.387, about 1.7 SD clear of the runner-up).
+      </p>
+      <p>
+        <strong>Validation — GroupKFold by client, not by time.</strong> The risk here is a page's own client leaking across train/test, not future leakage. A single 80/20 grouped split was tried first and rejected: across 5 seeds, the held-out page share swung from 0.5% to 29.6%, and at one seed the held-out set was 100% one content type versus 70% in training — not a stable estimate. 5-fold GroupKFold was used instead, with out-of-fold labels aligned to a reference labeling via Hungarian matching on centroid distance.
+      </p>
+      <p>
+        <strong>Outcome definition:</strong> a page "improved" if its April CTR exceeded its March CTR, requiring April impressions ≥ 100. An earlier definition (reach the March median CTR of one's own position tier) was dropped after discovering two tiers have a median CTR of exactly 0 — it inflated the trivial base rate to 51.5%.
+      </p>
+      <p>
+        <strong>Baseline:</strong> a transparent rule — flag a page if it clears a 100-impression volume floor and its CTR sits below the peer median for its position tier. Reproduced here bit-for-bit against the modeling population: 101,409 shared rows, score agreement 1.0000.
+      </p>
+      <p>
+        <strong>Leakage check:</strong> a positive-control probe (predicting "improved" from honest features vs. honest + the leaked outcome CTR) scored AUC 0.637 honest vs. 0.940 leaked — confirming the evaluation pipeline detects a real leak when one is deliberately introduced.
+      </p>
+    </section>
+
+    <section id="results">
+      <h2>Results</h2>
+      <p>
+        Raw, the baseline rule looks like it works: flagged pages improve at 33.4% versus a 29.3% base rate — a 1.14× lift. That lift does not survive controlling for where a page started. Using indirect standardization (observed ÷ expected improve-rate, 95% CI bootstrapped by client, B=300), the rule's O/E is 1.03, CI [0.92, 1.16] — indistinguishable from chance.
+      </p>
+
+      <figure>
+        <img src="figures/oe_forest.png" alt="Forest plot of O/E improve-rate ratios with 95% confidence intervals for the rule and four archetypes, against a chance line at 1.0">
+        <figcaption><span class="takeaway">Only two groups clear chance, and both point down, not up.</span> The rule and three of the four archetypes sit on the chance line once starting CTR is controlled for.</figcaption>
+      </figure>
+
+      <p>
+        The reason is visible directly: improve-rate falls from roughly 50% down to roughly 17% as starting March CTR rises, independent of any rule or archetype label. The rule mostly selected low-CTR pages, and low-CTR pages regress toward a higher improve-rate on their own.
+      </p>
+
+      <figure>
+        <img src="figures/improve_by_ctr_stratum.png" alt="Bar chart of April improve-rate by March CTR stratum, declining from about 50% to about 17%">
+        <figcaption><span class="takeaway">This is the confound the O/E figure above controls for.</span> A rule that selects low-CTR pages will look like it "improves" them even doing nothing.</figcaption>
+      </figure>
+
+      <p><strong>Stated plainly:</strong> once starting CTR is controlled for, neither the baseline rule nor the archetype clustering demonstrates skill at predicting April CTR movement. That is the paper's headline finding, not an aside.</p>
+
+      <p>Two results survive this scrutiny, and both point down:</p>
+      <ul>
+        <li><strong>Buried</strong> — O/E 0.645, 95% CI [0.456, 0.810], independently recomputed later at 0.667, CI [0.470, 0.855]. Both intervals sit entirely below 1.0.</li>
+        <li><strong>Overlooked</strong>, restricted to its top-1000 pages by centroid distance — O/E 0.768, CI [0.640, 0.912].</li>
+      </ul>
+
+      <figure>
+        <img src="figures/archetype_profile.png" alt="Four small-multiple bar charts showing median impressions, clicks, CTR, and position for the four archetypes: Buried, Overlooked, Steady performers, Long tail">
+        <figcaption><span class="takeaway">Buried sits at median position 41 with zero clicks; Overlooked earns a CTR ~3× anyone else's off modest volume.</span> Steady performers carry the highest volume; Long tail is half the inventory at near-zero engagement.</figcaption>
+      </figure>
+
+      <p>
+        Buried is also the most durable label across months: 82.4% of March-labeled Buried pages are still labeled Buried in May, against a 20.7% rate expected by chance under independent relabeling — the most durable of the four archetypes. A below-chance outcome <em>and</em> a durable label is a combination no other archetype has, which is why it is the paper's only high-confidence recommendation.
+      </p>
+
+      <figure>
+        <img src="figures/archetype_retention_vs_chance.png" alt="Grouped bar chart comparing observed March-to-May label retention against a chance baseline for each of the four archetypes">
+        <figcaption><span class="takeaway">Buried is the most durable label of the four — 82.4% observed vs. 20.7% expected by chance.</span> Overlooked is the least durable, which is why it sits in the "re-verify" tier rather than "act now."</figcaption>
+      </figure>
+      <p>
+        The rule and the clustering also disagree sharply in practice: the baseline rule never once flags an Overlooked page — its "CTR below peer median" logic and Overlooked's "CTR well above peers" profile point in opposite directions by construction.
+      </p>
+    </section>
+
+    <section id="limitations">
+      <h2>Limitations &amp; Honest Framing</h2>
+      <ul>
+        <li><strong>No causal claim.</strong> Every number here is an observed association in one non-intervention window (March→April), not the effect of taking any action. "O/E below 1.0" means observed improve-rate came in lower than a CTR-adjusted expectation — not that the label caused pages to get worse.</li>
+        <li><strong>Uneven attrition biases the comparison.</strong> 99.8% of Steady-performer pages survive to the April volume floor versus 77.3% of Buried pages — the true Buried result is probably worse than 0.645, since dropped pages are disproportionately the weakest ones.</li>
+        <li><strong>44 clients, one at 21.3% of the population.</strong> Wide confidence intervals, and a real risk that a pattern is one large client's behavior wearing an archetype's name. The GroupKFold-by-client design guards against this but does not eliminate the concentration.</li>
+        <li><strong>On-site behavior (GA4) is excluded entirely.</strong> Only 27.3% of pages carry real GA4 history; every archetype here describes search-side behavior only, never what happens after the click.</li>
+        <li><strong>No "ranking lags demand" archetype exists in this feature set.</strong> An earlier run surfaced a 5th cluster resembling exactly that, but it vanished once a leaking feature was dropped — it was a measurement artifact, not a real page type.</li>
+        <li>A small burst-then-revert data-quality pattern exists in the raw signal (0.74% of the scored queue), consistent with automated crawling or rank-tracking activity rather than organic ranking — flagged, not filtered, since it wasn't material to the results.</li>
+        <li><strong>Clusters are a lens, not a label.</strong> They group pages for review; they are not a certified fact about any individual page.</li>
+        <li><strong>Coverage is partial.</strong> The scored action queue reaches 24.1% of raw May inventory; 75.9% falls outside scope (unpublished, missing signal, or below the volume floor).</li>
+      </ul>
+      <figure>
+        <img src="figures/coverage_funnel.png" alt="Horizontal funnel chart showing 389,153 raw May pages narrowing to 93,728 queue-eligible pages">
+        <figcaption><span class="takeaway">Only 24.1% of the raw May inventory reaches the ranked queue.</span> The rest has no metadata match, is unpublished, has no search signal, or falls below the volume floor.</figcaption>
+      </figure>
+    </section>
+
+    <section id="recommendations">
+      <h2>Ranked Recommendations</h2>
+      <p>Tiered by <strong>evidence × durability</strong>, not by raw lift — Results shows raw lift alone cannot be trusted.</p>
+      <div class="table-wrap">
+      <table>
+        <tr><th>Tier</th><th>Archetype</th><th>Action</th><th>Why</th><th>Pages (May)</th></tr>
+        <tr><td class="tier-1">1 — act now</td><td>Buried</td><td>prune / rewrite</td><td>O/E 0.645–0.667 (CI excludes 1.0, two independent runs) <strong>and</strong> 82.4% durable — the only archetype where both signals agree</td><td>20,764</td></tr>
+        <tr><td>2 — re-verify before acting</td><td>Overlooked</td><td>improve / expand</td><td>O/E crosses 1.0 (no clear effect) and only 35.3% durable — queue position reflects instability, not a case against ever improving these pages</td><td>7,041</td></tr>
+        <tr><td>3 — protect</td><td>Steady performers</td><td>protect / monitor</td><td>O/E at chance — no evidence further action helps — but highest median impressions/CTR, real value at stake if neglected</td><td>25,110</td></tr>
+        <tr><td>4 — light monitor</td><td>Long tail</td><td>monitor</td><td>O/E at chance, near-zero median CTR — lowest value at stake</td><td>40,813</td></tr>
+      </table>
+      </div>
+      <figure>
+        <img src="figures/tier_sizes.png" alt="Bar chart of page counts per tier: Buried 20,764; Overlooked 7,041; Steady performers 25,110; Long tail 40,813">
+        <figcaption><span class="takeaway">Every tier is too large to review whole in one cycle — hence the per-client cap.</span> Tier sizes on the May-scored queue, in priority order.</figcaption>
+      </figure>
+
+      <p><strong>Review load:</strong> capped at the top 20 pages per client per review cycle — covers 31.2% of Tier-1 clients fully at 2.4% of Tier-1's total page count.</p>
+      <div class="callout warn">
+        <strong>No-go list — never automate from a tier alone.</strong> No auto-delete, auto-unpublish, or auto-rewrite without a named human signing off, citing the reason code. Never act on Tier 2 without re-checking a page's current archetype. Never treat one row's tier as certain about that page. Never use this queue for cross-client resourcing without accounting for the 21.3% single-client concentration.
+      </div>
+      <p>
+        <strong>Retrain triggers</strong> (midpoint of each archetype's baseline and its own chance retention rate): overall retention below 49.4%; Buried below 51.6% (Tier 1's entire justification rests on this number); Overlooked below 21.3%; Long tail below 55.0%; Steady performers below 46.9%. Also: coverage-funnel drift from 24.1%, client-concentration drift from 21.3%, or Buried's O/E confidence interval crossing 1.0 on a fresh re-run.
+      </p>
+    </section>
+
+    <section id="reproducibility">
+      <h2>Reproducibility</h2>
+      <p>Every notebook below is committed to the repository and runs top to bottom. Random seed fixed at 42 throughout (K-Means, cross-validation, bootstraps). Environment: Python 3.12.10, numpy 2.2.4, pandas 2.2.3, scikit-learn 1.9.0, duckdb 1.2.1.</p>
+      <ul>
+        <li><a href="https://github.com/jerovernay/FlyRank-Internship/blob/main/work/notebooks/w01_research_question.ipynb">w01 — Research question</a></li>
+        <li><a href="https://github.com/jerovernay/FlyRank-Internship/blob/main/work/notebooks/w02_ml_task_framing.ipynb">w02 — ML task framing</a></li>
+        <li><a href="https://github.com/jerovernay/FlyRank-Internship/blob/main/work/notebooks/w03_data_contract.ipynb">w03 — Data contract</a></li>
+        <li><a href="https://github.com/jerovernay/FlyRank-Internship/blob/main/work/notebooks/w03_feature_leakage_check.ipynb">w03 — Feature leakage check</a></li>
+        <li><a href="https://github.com/jerovernay/FlyRank-Internship/blob/main/work/notebooks/w04_baseline_score.ipynb">w04 — Baseline rule &amp; score</a></li>
+        <li><a href="https://github.com/jerovernay/FlyRank-Internship/blob/main/work/notebooks/w05_model.ipynb">w05 — Model (clustering, validation, O/E results)</a></li>
+        <li><a href="https://github.com/jerovernay/FlyRank-Internship/blob/main/work/notebooks/w06_validation_audit.ipynb">w06 — Validation audit (stability, positive control)</a></li>
+        <li><a href="https://github.com/jerovernay/FlyRank-Internship/blob/main/work/notebooks/w07_action_playbook.ipynb">w07 — Action playbook (ranked queue)</a></li>
+        <li><a href="https://github.com/jerovernay/FlyRank-Internship/blob/main/work/notebooks/capstone.ipynb">capstone.ipynb — this paper's source notebook</a></li>
+      </ul>
+      <p>
+        Heavy per-row intermediates (feature parquets, the full ranked queue CSV) are intentionally gitignored — the re-run path is <code>w05_model.ipynb → w06_validation_audit.ipynb → w07_action_playbook.ipynb</code> against the same warehouse partition. No model object is persisted anywhere in the project; centroid values and the metrics receipts file (<code>work/outputs/ml10_playbook_metrics.json</code>) are the durable record. Full repository: <a href="https://github.com/jerovernay/FlyRank-Internship">github.com/jerovernay/FlyRank-Internship</a>.
+      </p>
+    </section>
+
+    <footer id="acknowledgments">
+      <h2>Acknowledgments &amp; Data Credit</h2>
+      <p>Built on the <a href="https://flyrank.ai" target="_blank" rel="noopener">FlyRank ML Internship dataset</a>. Data credit and gratitude to FlyRank for the underlying warehouse this work is built on.</p>
+      <p><a class="backtop" href="#abstract">↑ back to top</a></p>
+    </footer>
+  </main>
+</div>
+
+<script>
+  const links = document.querySelectorAll('nav.toc a');
+  const sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  function onScroll(){
+    let idx = 0;
+    for (let i = 0; i < sections.length; i++){
+      if (sections[i] && sections[i].getBoundingClientRect().top < 120) idx = i;
+    }
+    links.forEach((a, i) => a.classList.toggle('active', i === idx));
+  }
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>
