@@ -1,6 +1,6 @@
-<title>What Actually Works on 30,000 Underperforming Pages? A Null Result, Honestly Reported</title>
+<title>What Actually Works on Underperforming Search Pages? A Null Result, Honestly Reported</title>
 <meta name="description" content="An SEO content-refresh rule looked like it beat the base rate by 14% — until CTR was controlled for. What survived controlling for it, and the one archetype worth acting on.">
-<meta property="og:title" content="What Actually Works on 30,000 Underperforming Pages? A Null Result, Honestly Reported">
+<meta property="og:title" content="What Actually Works on Underperforming Search Pages? A Null Result, Honestly Reported">
 <meta property="og:description" content="Unsupervised content archetypes vs. a transparent CTR rule, evaluated on the same split. The rule's apparent lift turned out to be regression to the mean.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -128,15 +128,15 @@
   </nav>
 
   <main>
-    <h1>What Actually Works on 30,000 Underperforming Pages?</h1>
+    <h1>What Actually Works on Underperforming Search Pages?</h1>
     <p class="subtitle">A transparent CTR rule looked like it beat chance by 14%. Once starting CTR is controlled for, it doesn't — and neither does an unsupervised archetype clustering built to replace it. Two findings survive, and both point down.</p>
-    <p class="byline">FlyRank ML Internship — Capstone, Lane 3 (Structured Content Archetype Clustering) · <a href="https://github.com/jerovernay/FlyRank-Internship">Repository</a></p>
+    <p class="byline">Jerónimo Vernay · FlyRank ML Internship — Capstone, Lane 3 (Structured Content Archetype Clustering) · August 2026 · <a href="https://github.com/jerovernay/FlyRank-Internship">Repository</a></p>
 
     <section id="abstract">
       <h2>Abstract</h2>
       <div class="abstract">
         <p>
-          Which of ~30,000 underperforming search pages are actually worth a content team's limited attention, and does a fixed CTR-based rule pick the right ones? Using one month of search-performance data from the FlyRank ML Internship warehouse (331,437 content items, aggregated from 9.8M daily fact rows), a transparent baseline rule and an unsupervised K-Means clustering (k=4, four search-side features, GroupKFold-by-client validation) were each evaluated against the same April outcome window. The rule's raw 1.14× lift over the base improve-rate evaporates once starting CTR is controlled for (O/E 1.03, 95% CI [0.92, 1.16]) — the lift was regression to the mean, not rule skill — and the archetype clustering shows no better discrimination for three of its four groups. Two results survive: the <strong>Buried</strong> archetype scores meaningfully <em>below</em> chance (O/E 0.645, CI [0.456, 0.810], independently reproduced at 0.667) and is also the most durable label across months (82.4% March→May retention vs. 20.7% expected by chance), making it the only recommendation with two independent signals in agreement. This output is decision-support for a monthly content-review queue, not a causal or predictive claim.
+          Which of a content team's tens of thousands of underperforming search pages are actually worth its limited attention, and does a fixed CTR-based rule pick the right ones? Using one month of search-performance data from the FlyRank ML Internship warehouse (331,437 content items, aggregated from 9.8M daily fact rows), a transparent baseline rule and an unsupervised K-Means clustering (k=4, four search-side features, GroupKFold-by-client validation) were each evaluated against the same April outcome window. The rule's raw 1.14× lift over the base improve-rate evaporates once starting CTR is controlled for (O/E 1.03, 95% CI [0.92, 1.16]) — the lift was regression to the mean, not rule skill — and three of the four archetype groups show no better discrimination than chance either. Two results survive: the <strong>Buried</strong> archetype scores meaningfully <em>below</em> chance (O/E 0.645, CI [0.456, 0.810], independently reproduced at 0.667) and is also the most durable label across months (82.4% March→May retention vs. 20.7% expected by chance), making it the only recommendation with two independent signals in agreement. This output is decision-support for a monthly content-review queue, not a causal or predictive claim.
         </p>
       </div>
     </section>
@@ -150,7 +150,7 @@
         The cost of getting this wrong is not a single bad call — it lands in <strong>batches</strong>. Pruning a hidden gem because it resembled the wrong group loses that traffic permanently; spending rewrite capacity on pages that were never going to move wastes editorial time across every page carrying that label. A transparent rule already exists (flag low-CTR pages relative to their position peers); this work asks whether an unsupervised clustering of search behavior finds a better way to route the queue — and, honestly, whether either approach clears the bar of "better than doing nothing."
       </p>
       <p>
-        The strongest pairwise correlation among the candidate signals was 0.33 (log-impressions × word count) — no single pair was redundant enough to collapse into a fixed if-statement axis, which is the case for trying a multi-dimensional clustering at all.
+        The strongest pairwise correlation among the candidate signals was 0.33 (log-impressions × word count) — no single pair was redundant enough to collapse into a fixed if-statement axis, which is why a multi-dimensional clustering is worth trying at all.
       </p>
     </section>
 
@@ -186,7 +186,7 @@
         An earlier feature set added <code>word_count</code> and content-type/intent one-hots. It produced a k=2 split that a single depth-1 rule on "has word count" reproduced at 99.17% accuracy — a data-availability artifact (word count missing for ~30% of pages, median-filled, manufacturing a fake gap), not a real archetype. <code>engaged_sessions</code> was dropped for the same reason: one resulting cluster sat at exactly 100% GA4 coverage — it was finding the GA4-covered slice of the inventory, not a behavioral pattern.
       </p>
       <p>
-        <strong>Method:</strong> plain K-Means on standardized features, seed 42. <strong>k selection:</strong> swept k=2–10 inside each fold's training clients, rejecting any k whose smallest cluster fell under 2% of pages; k=4 won on mean silhouette (0.387, about 1.7 SD clear of the runner-up).
+        <strong>Method:</strong> plain K-Means on standardized features, seed 42 — the scaler is re-fit inside each training fold only (never on the full dataset), so no fold's test statistics leak into its own standardization. <strong>k selection:</strong> swept k=2–10 inside each fold's training clients, rejecting any k whose smallest cluster fell under 2% of pages; k=4 won on mean silhouette (0.387, about 1.7 SD clear of the runner-up). 0.387 is a moderate score, not a strong one — the four groups are a real but overlapping structure, not cleanly separated clusters, which is part of why they're read as a review lens rather than a certainty (see Limitations).
       </p>
       <p>
         <strong>Validation — GroupKFold by client, not by time.</strong> The risk here is a page's own client leaking across train/test, not future leakage. A single 80/20 grouped split was tried first and rejected: across 5 seeds, the held-out page share swung from 0.5% to 29.6%, and at one seed the held-out set was 100% one content type versus 70% in training — not a stable estimate. 5-fold GroupKFold was used instead, with out-of-fold labels aligned to a reference labeling via Hungarian matching on centroid distance.
@@ -195,10 +195,16 @@
         <strong>Outcome definition:</strong> a page "improved" if its April CTR exceeded its March CTR, requiring April impressions ≥ 100. An earlier definition (reach the March median CTR of one's own position tier) was dropped after discovering two tiers have a median CTR of exactly 0 — it inflated the trivial base rate to 51.5%.
       </p>
       <p>
-        <strong>Baseline:</strong> a transparent rule — flag a page if it clears a 100-impression volume floor and its CTR sits below the peer median for its position tier. Reproduced here bit-for-bit against the modeling population: 101,409 shared rows, score agreement 1.0000.
+        <strong>Baseline:</strong> a transparent rule — flag a page if it clears a 100-impression volume floor and its CTR sits below the peer median for its position tier. Reproduced here bit-for-bit against the modeling population: 101,409 shared rows, score agreement 1.0000. That 101,409 is the 331,437 raw March content items after the same 100-impression volume floor plus a complete-feature requirement (all four search-side features present); the remaining ~69% is mostly pages below the volume floor, which is also why the ranked queue in Recommendations only ever reaches a minority of the raw inventory.
+      </p>
+      <p>
+        <strong>Standardization.</strong> Reported O/E ratios use indirect standardization: the expected improve-rate for a group is the population's improve-rate re-weighted to that group's March-CTR-stratum composition (the same 9 strata plotted in the confound chart below), so a group isn't credited or penalized for simply containing more low- or high-CTR pages than average.
       </p>
       <p>
         <strong>Leakage check:</strong> a positive-control probe (predicting "improved" from honest features vs. honest + the leaked outcome CTR) scored AUC 0.637 honest vs. 0.940 leaked — confirming the evaluation pipeline detects a real leak when one is deliberately introduced.
+      </p>
+      <p>
+        <strong>Multiple comparisons.</strong> Six groups are checked against chance in Results (the rule, four archetypes, and one archetype subset) without a Bonferroni or FDR correction. This is reported as exploratory, decision-support evidence, not a confirmatory hypothesis test — which is also why the ranked recommendations weight durability alongside O/E rather than treating any single CI as proof.
       </p>
     </section>
 
@@ -213,6 +219,19 @@
         <figcaption><span class="takeaway">Only two groups clear chance, and both point down, not up.</span> The rule and three of the four archetypes sit on the chance line once starting CTR is controlled for.</figcaption>
       </figure>
 
+      <div class="table-wrap">
+      <table>
+        <tr><th>Group</th><th>n</th><th>O/E</th><th>95% CI</th><th>Clears chance?</th></tr>
+        <tr><td>Buried</td><td>9,663</td><td>0.645</td><td>[0.456, 0.810]</td><td>Below 1.0</td></tr>
+        <tr><td>Overlooked, top-1000 by centroid distance</td><td>1,000</td><td>0.768</td><td>[0.640, 0.912]</td><td>Below 1.0</td></tr>
+        <tr><td>Overlooked (full group)</td><td>5,715</td><td>0.896</td><td>[0.714, 1.050]</td><td>No — crosses 1.0</td></tr>
+        <tr><td>Rule: snippet_fix (ML-07)</td><td>36,704</td><td>1.032</td><td>[0.925, 1.164]</td><td>No — crosses 1.0</td></tr>
+        <tr><td>Long tail</td><td>42,911</td><td>1.041</td><td>[0.930, 1.150]</td><td>No — crosses 1.0</td></tr>
+        <tr><td>Steady performers</td><td>30,185</td><td>1.059</td><td>[0.865, 1.233]</td><td>No — crosses 1.0</td></tr>
+      </table>
+      </div>
+      <p style="font-size:.87rem;color:var(--ink-soft);">Exact figures behind the chart above, for reference rather than chart-reading. Six groups tested against chance without a multiple-comparisons correction — see Methodology.</p>
+
       <p>
         The reason is visible directly: improve-rate falls from roughly 50% down to roughly 17% as starting March CTR rises, independent of any rule or archetype label. The rule mostly selected low-CTR pages, and low-CTR pages regress toward a higher improve-rate on their own.
       </p>
@@ -224,10 +243,10 @@
 
       <p><strong>Stated plainly:</strong> once starting CTR is controlled for, neither the baseline rule nor the archetype clustering demonstrates skill at predicting April CTR movement. That is the paper's headline finding, not an aside.</p>
 
-      <p>Two results survive this scrutiny, and both point down:</p>
+      <p>Two results survive this scrutiny, and both point down — but they don't carry equal weight:</p>
       <ul>
-        <li><strong>Buried</strong> — O/E 0.645, 95% CI [0.456, 0.810], independently recomputed later at 0.667, CI [0.470, 0.855]. Both intervals sit entirely below 1.0.</li>
-        <li><strong>Overlooked</strong>, restricted to its top-1000 pages by centroid distance — O/E 0.768, CI [0.640, 0.912].</li>
+        <li><strong>Buried</strong>, the whole group, 9,663 pages — O/E 0.645, 95% CI [0.456, 0.810], independently recomputed later at 0.667, CI [0.470, 0.855]. Both intervals sit entirely below 1.0. This is the paper's primary finding.</li>
+        <li><strong>Overlooked</strong>, restricted after the fact to its top-1000 pages by centroid distance — O/E 0.768, CI [0.640, 0.912]. The full Overlooked group (5,715 pages) does <em>not</em> clear chance on its own (O/E 0.896, CI [0.714, 1.050]); the top-1000 cut was chosen after seeing that result, to ask whether the most archetype-typical pages behave differently — it is a secondary, post-hoc observation, not independent confirmation, and it isn't corrected for testing six groups. It supports "re-verify," not "act now" — see Ranked recommendations.</li>
       </ul>
 
       <figure>
@@ -294,7 +313,7 @@
 
     <section id="reproducibility">
       <h2>Reproducibility</h2>
-      <p>Every notebook below is committed to the repository and runs top to bottom. Random seed fixed at 42 throughout (K-Means, cross-validation, bootstraps). Environment: Python 3.12.10, numpy 2.2.4, pandas 2.2.3, scikit-learn 1.9.0, duckdb 1.2.1.</p>
+      <p>Every notebook below is committed to the repository and runs top to bottom. Random seed fixed at 42 throughout (K-Means, cross-validation, bootstraps). Environment: Python 3.12.10, numpy 2.2.4, pandas 2.2.3, scikit-learn 1.9.0, duckdb 1.2.1, pinned in <a href="https://github.com/jerovernay/FlyRank-Internship/blob/main/requirements.txt">requirements.txt</a>.</p>
       <ul>
         <li><a href="https://github.com/jerovernay/FlyRank-Internship/blob/main/work/notebooks/w01_research_question.ipynb">w01 — Research question</a></li>
         <li><a href="https://github.com/jerovernay/FlyRank-Internship/blob/main/work/notebooks/w02_ml_task_framing.ipynb">w02 — ML task framing</a></li>
