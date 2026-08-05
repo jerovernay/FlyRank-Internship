@@ -1,6 +1,6 @@
-<title>What Actually Works on Underperforming Search Pages? A Null Result, Honestly Reported</title>
+<title>On the Limits of Rule-Based and Unsupervised Content Triage</title>
 <meta name="description" content="An SEO content-refresh rule looked like it beat the base rate by 14% — until CTR was controlled for. What survived controlling for it, and the one archetype worth acting on.">
-<meta property="og:title" content="What Actually Works on Underperforming Search Pages? A Null Result, Honestly Reported">
+<meta property="og:title" content="On the Limits of Rule-Based and Unsupervised Content Triage">
 <meta property="og:description" content="Unsupervised content archetypes vs. a transparent CTR rule, evaluated on the same split. The rule's apparent lift turned out to be regression to the mean.">
 <meta property="og:image" content="https://jerovernay.github.io/FlyRank-Internship/figures/oe_forest.png">
 <meta property="og:image:alt" content="Forest plot of O/E improve-rate ratios with 95% confidence intervals for the rule and four content archetypes, against a chance line at 1.0">
@@ -78,7 +78,8 @@
     background:var(--card); border:1px solid var(--border); border-radius:10px;
     padding:1.4rem 1.6rem; margin: 1.6rem 0 2.4rem;
   }
-  .abstract p{ margin:0; max-width:none; }
+  .abstract p{ margin:0 0 1rem; max-width:none; }
+  .abstract p:last-child{ margin-bottom:0; }
 
   table{ border-collapse: collapse; width:100%; margin: 1.2rem 0; font-size:.92rem; }
   th, td{ text-align:left; padding:.55rem .7rem; border-bottom:1px solid var(--border); vertical-align: top; }
@@ -133,7 +134,7 @@
   </nav>
 
   <main>
-    <h1>What Actually Works on Underperforming Search Pages?</h1>
+    <h1>On the Limits of Rule-Based and Unsupervised Content Triage</h1>
     <p class="subtitle">A transparent CTR rule looked like it beat chance by 14%. Once starting CTR is controlled for, it doesn't — and neither does an unsupervised archetype clustering built to replace it. Two findings survive, and both point down.</p>
     <p class="byline">Jerónimo Vernay · FlyRank ML Internship — Capstone, Lane 3 (Structured Content Archetype Clustering) · August 2026 · <a href="https://github.com/jerovernay/FlyRank-Internship">Repository</a></p>
 
@@ -141,7 +142,13 @@
       <h2>Abstract</h2>
       <div class="abstract">
         <p>
-          Which of a content team's tens of thousands of underperforming search pages are actually worth its limited attention, and does a fixed CTR-based rule pick the right ones? Using one month of search-performance data from the FlyRank ML Internship warehouse (331,437 content items, aggregated from 9.8M daily fact rows), a transparent baseline rule and an unsupervised K-Means clustering (k=4, four search-side features, GroupKFold-by-client validation) were each evaluated against the same April outcome window. The rule's raw 1.14× lift over the base improve-rate evaporates once starting CTR is controlled for (O/E 1.03, 95% CI [0.92, 1.16]) — the lift was regression to the mean, not rule skill — and three of the four archetype groups show no better discrimination than chance either. Two results survive: the <strong>Buried</strong> archetype scores meaningfully <em>below</em> chance (O/E 0.645, CI [0.456, 0.810], independently reproduced at 0.667) and is also the most durable label across months (82.4% March→May retention vs. 20.7% expected by chance), making it the only recommendation with two independent signals in agreement. This output is decision-support for a monthly content-review queue, not a causal or predictive claim.
+          Which of a content team's tens of thousands of underperforming search pages are actually worth its limited attention, and does a fixed CTR-based rule pick the right ones? Using one month of search-performance data from the FlyRank ML Internship warehouse (331,437 content items, aggregated from 9.8M daily fact rows), a transparent baseline rule and an unsupervised K-Means clustering (k=4, four search-side features, GroupKFold-by-client validation) were each evaluated against the same April outcome window.
+        </p>
+        <p>
+          The rule's raw 1.14× lift over the base improve-rate evaporates once starting CTR is controlled for (O/E 1.03, 95% CI [0.92, 1.16]) — the lift was regression to the mean, not rule skill — and three of the four archetype groups show no better discrimination than chance either.
+        </p>
+        <p>
+          Two results survive: the <strong>Buried</strong> archetype scores meaningfully <em>below</em> chance (O/E 0.645, CI [0.456, 0.810], independently reproduced at 0.667) and is also the most durable label across months (82.4% March→May retention vs. 20.7% expected by chance), making it the only recommendation with two independent signals in agreement. This output is decision-support for a monthly content-review queue, not a causal or predictive claim.
         </p>
       </div>
     </section>
